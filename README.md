@@ -1,11 +1,8 @@
-cat
-
-===============
-
+# cat
 
 nodejs <--> AMD 转换工具
 
-h1 AMD Usage
+# AMD Usage
 
 Sets up the module with ID of "alpha", that uses require, exports and the module with ID of "beta":
 ```
