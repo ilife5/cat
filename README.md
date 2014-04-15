@@ -4,7 +4,8 @@ nodejs <--> AMD 转换工具
 
 # AMD Usage
 
-Sets up the module with ID of "alpha", that uses require, exports and the module with ID of "beta":
+创建一个id为"alpha"的模块，使用了require，exports，和id为"beta"的模块:
+
 ```
 define("alpha", ["require", "exports", "beta"], function (require, exports, beta) {
    exports.verb = function() {
@@ -15,7 +16,7 @@ define("alpha", ["require", "exports", "beta"], function (require, exports, beta
 });
 ```
 
-An anonymous module that returns an object literal:
+返回对象字面量的匿名模块：
 
 ```
 define(["alpha"], function (alpha) {
@@ -27,7 +28,7 @@ define(["alpha"], function (alpha) {
 });
 ```
 
-A dependency-free module can define a direct object literal:
+没有依赖的模块可以用来直接定义对象字面量：
 
 ```
 define({
@@ -37,7 +38,7 @@ define({
 });
 ```
 
-A module defined using the simplified CommonJS wrapping:
+使用简单CJS包装定义模块
 
 ```
 define(function (require, exports, module) {
