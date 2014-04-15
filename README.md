@@ -2,7 +2,7 @@
 
 nodejs <--> AMD 转换工具
 
-# AMD Usage
+## AMD Usage
 
 创建一个id为"alpha"的模块，使用了require，exports，和id为"beta"的模块:
 
@@ -49,7 +49,7 @@ define(function (require, exports, module) {
 });
 ```
 
-# Modules 1.1.1 Usage
+## Modules 1.1.1 Usage
 
 math.js
 
@@ -80,4 +80,68 @@ var a = 1;
 inc(a); // 2
  
 module.id == "program";
+```
+
+## CMD Usage
+
+# Usage
+
+**A typical sample**
+
+math.js
+```js
+define(function(require, exports, module) {
+  exports.add = function() {
+    var sum = 0, i = 0, args = arguments, l = args.length;
+    while (i < l) {
+      sum += args[i++];
+    }
+    return sum;
+  };
+});
+```
+
+increment.js
+```js
+define(function(require, exports, module) {
+  var add = require('math').add;
+  exports.increment = function(val) {
+    return add(val, 1);
+  };
+});
+```
+
+program.js
+```js
+define(function(require, exports, module) {
+  var inc = require('increment').increment;
+  var a = 1;
+  inc(a); // 2
+
+  module.id == "program";
+});
+```
+
+
+**Wrapped modules with non-function factory**
+
+object-data.js
+```js
+define({
+    foo: "bar"
+});
+```
+
+array-data.js
+```js
+define([
+    'foo',
+    'bar'
+]);
+```
+
+string-data.js
+```
+define('foo bar');
+
 ```
