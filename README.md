@@ -48,3 +48,36 @@ define(function (require, exports, module) {
 	exports.action = function () {};
 });
 ```
+
+# Modules 1.1. Usage
+
+math.js
+
+```
+exports.add = function() {
+    var sum = 0, i = 0, args = arguments, l = args.length;
+    while (i < l) {
+        sum += args[i++];
+    }
+    return sum;
+};
+```
+
+increment.js
+
+```
+var add = require('math').add;
+exports.increment = function(val) {
+    return add(val, 1);
+};
+```
+
+program.js
+
+```
+var inc = require('increment').increment;
+var a = 1;
+inc(a); // 2
+ 
+module.id == "program";
+```
