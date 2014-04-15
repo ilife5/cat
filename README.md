@@ -84,10 +84,6 @@ module.id == "program";
 
 ## CMD Usage
 
-# Usage
-
-**A typical sample**
-
 math.js
 ```js
 define(function(require, exports, module) {
