@@ -49,7 +49,7 @@ define(function (require, exports, module) {
 });
 ```
 
-# Modules 1.1. Usage
+# Modules 1.1.1 Usage
 
 math.js
 
