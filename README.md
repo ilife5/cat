@@ -2,6 +2,70 @@
 
 nodejs <--> AMD 转换工具
 
+## CommonJs Modules --> AMD
+
+### 基本方法模块 
+
+此类模块使用exports导出方法，特点是无依赖
+
+math.js (CommonJs Module)
+
+```
+exports.add = function() {
+    var sum = 0, i = 0, args = arguments, l = args.length;
+    while (i < l) {
+        sum += args[i++];
+    }
+    return sum;
+};
+```
+
+等价于：
+
+math.js (AMD Module)
+
+```
+define({
+	add : function() {
+	    var sum = 0, i = 0, args = arguments, l = args.length;
+	    while (i < l) {
+	        sum += args[i++];
+	    }
+	    return sum;
+	}
+});
+```
+
+### 有依赖的方法模块
+
+此类模块依赖其他模块，通过exports导出方法
+
+increment.js (CommonJs Module)
+
+```
+var add = require('math').add;
+exports.increment = function(val) {
+    return add(val, 1);
+};
+```
+
+等价于
+
+increment.js(AMD Module)
+
+```
+define(['math'], function(math) {
+    var add = math.add;
+    return {
+        increment : function(val) {
+            return add(val, 1);
+        }
+    };
+}); 
+```
+
+
+
 ## AMD Usage
 
 创建一个id为"alpha"的模块，使用了require，exports，和id为"beta"的模块:
