@@ -64,6 +64,10 @@ define(['math'], function(math) {
 }); 
 ```
 
+## 扩展的CommonJs Module
+
+这里列出扩展过的CommonJs Module的使用方法及AMD Module的转换方法，扩展来源于[fekit](https://github.com/rinh/fekit)，[avalon](https://github.com/RubyLouvre/avalon)。
+
 
 
 ## AMD Usage
