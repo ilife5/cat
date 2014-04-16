@@ -64,11 +64,240 @@ define(['math'], function(math) {
 }); 
 ```
 
+### 业务代码，无导出
+
+program.js (CommonJs Module)
+
+```
+var inc = require('increment').increment;
+var a = 1;
+inc(a); // 2
+```
+
+program.js (AMD Module)
+
+```
+define(['increment'], function(increment) {
+    var inc = increment.increment;
+    var a = 1;
+    inc(a); //2
+});
+```
+
 ## 扩展的CommonJs Module
 
 这里列出扩展过的CommonJs Module的使用方法及AMD Module的转换方法，扩展来源于[fekit](https://github.com/rinh/fekit)，[avalon](https://github.com/RubyLouvre/avalon)。
 
+Calculation.js (extend CommonJs Module)
+```
+//将构造函数Calculation通过module.exports导出
+function Calculation() {
+}
 
+Calculation.prototype.add = function(x, y) {
+    return x + y;
+};
+
+module.exports = Calculation;
+```
+
+Calculation.js (AMD Module)
+```
+define(function() {
+    function Calculation() {
+    }
+
+    Calculation.prototype.add = function(x, y) {
+        return x + y;
+    }; 
+
+    return Calculation;
+});
+```
+
+### 无任何导出，功能是执行函数或者向全局对象添加方法
+
+add.js (extend CommonJs Module)
+``` 
+//向avalon添加add方法
+require('avalon');
+
+function add(){
+    var sum = 0, i = 0, args = arguments, l = args.length;
+    while (i < l) {
+        sum += args[i++];
+    }
+    return sum;
+}
+
+avalon.add = add;
+```
+
+add.js (AMD Module)
+``` 
+//如果avalon并没有
+define(['avalon'], function(avalon) {
+   function add(){
+        var sum = 0, i = 0, args = arguments, l = args.length;
+        while (i < l) {
+            sum += args[i++];
+        }
+        return sum;
+    }
+
+    avalon.add = add; 
+});
+```
+
+### 作为入口，引入需要的包
+
+common.js (extend CommonJs Module)
+```
+require('avalon');
+require('json2');
+require('jquery');
+```
+
+common.js (AMD Module)
+
+```
+define(['avalon', 'json2', 'jquery'], function(avalon, json2, jquery) {});
+```
+
+### 引入string类型的文件
+
+biz.js (extend CommonJs Module)
+
+```
+var tpl = require('../templates/start'); //may be ../templates/start.string
+
+//...
+
+$container.append(tpl);
+
+```
+
+biz.js (AMD Module)
+
+```
+define(['text!../templates/start'], function (template) {
+    //...
+
+    $container.append(template);
+});
+```
+
+## AMD Modules --> CommonJs Modules
+
+### 使用了id, dependencies, factory的module
+
+alpha.js (AMD Module)
+```
+define("alpha", ["require", "exports", "beta"], function (require, exports, beta) {
+   exports.verb = function() {
+       return beta.verb();
+   }
+});
+```
+
+转换为：
+
+alpha.js (CommonJs Module)
+```
+var beta = require('beta');
+
+exports.verb = function() {
+    return beta.verb();
+};
+```
+
+### 返回对象字面量的匿名模块
+
+alpha.js (AMD Module)
+```
+define(["alpha"], function (alpha) {
+    return {
+        verb: function(){
+            return alpha.verb() + 2;
+        }
+    };
+});
+```
+
+转换为：
+
+alpha.js (CommonJs Module)
+```
+var alpha = require('alpha');
+
+exports.verb = function() {
+    return alpha.verb() + 2;
+};
+
+```
+
+### 定义没有依赖的对象字面量
+
+add.js (AMD Module)
+```
+define({
+    add: function(x, y){
+        return x + y;
+    }
+});
+```
+
+转换为：
+
+add.js (CommonJs Module)
+```
+exports.add = function(x, y) {
+    return x + y;
+};
+```
+
+### 使用CommonJs wrapper 定义的模块
+
+action.js (AMD Module)
+```
+define(function (require, exports, module) {
+    var a = require('a'),
+        b = require('b');
+
+    exports.action = function () {};
+});
+```
+
+action.js (CommonJs Module)
+```
+var a = require('a'),
+    b = require('b');
+
+exports.action = function () {};
+
+```
+
+### 使用text!插件
+
+biz.js (AMD Module)
+
+```
+define(['text!../templates/start'], function (template) {
+    //...
+
+    $container.append(template);
+});
+```
+
+biz.js (CommonJs Module)
+
+```
+var tpl = require('../templates/start'); 
+
+//...
+
+$container.append(tpl);
+```
 
 ## AMD Usage
 
