@@ -1,0 +1,19 @@
+{
+  "name": "cat",
+  "version": "0.0.0",
+  "description": "CommonJs Modules <--> AMD Modules",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ilife5/cat.git"
+  },
+  "author": "ilife5",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ilife5/cat/issues"
+  },
+  "homepage": "https://github.com/ilife5/cat"
+}
