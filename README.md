@@ -25,14 +25,16 @@ exports.add = function() {
 math.js (AMD Module)
 
 ```
-define({
-	add : function() {
-	    var sum = 0, i = 0, args = arguments, l = args.length;
-	    while (i < l) {
-	        sum += args[i++];
-	    }
-	    return sum;
-	}
+define([], function() {
+	return {
+		add : function() {
+		    var sum = 0, i = 0, args = arguments, l = args.length;
+		    while (i < l) {
+		        sum += args[i++];
+		    }
+		    return sum;
+		}
+	};
 });
 ```
 
@@ -103,7 +105,7 @@ module.exports = Calculation;
 
 Calculation.js (AMD Module)
 ```
-define(function() {
+define([], function() {
     function Calculation() {
     }
 
