@@ -154,14 +154,14 @@ define(['avalon'], function(avalon) {
 common.js (extend CommonJs Module)
 ```
 require('avalon');
-require('json2');
 require('jquery');
+require('./libs/json2');
 ```
 
 common.js (AMD Module)
 
 ```
-define(['avalon', 'json2', 'jquery'], function(avalon, json2, jquery) {});
+define(['avalon', 'jquery', './libs/json2'], function(avalon, jquery, json2) {});
 ```
 
 ### 引入string类型的文件
