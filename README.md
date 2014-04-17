@@ -2,9 +2,11 @@
 
 nodejs <--> AMD 转换工具
 
+# CJS
+
 ## CommonJs Modules --> AMD
 
-### 基本方法模块 
+### 基本方法模块
 
 此类模块使用exports导出方法，特点是无依赖
 
@@ -63,7 +65,7 @@ define(['math'], function(math) {
             return add(val, 1);
         }
     };
-}); 
+});
 ```
 
 ### 业务代码，无导出
@@ -111,7 +113,7 @@ define([], function() {
 
     Calculation.prototype.add = function(x, y) {
         return x + y;
-    }; 
+    };
 
     return Calculation;
 });
@@ -120,7 +122,7 @@ define([], function() {
 ### 无任何导出，功能是执行函数或者向全局对象添加方法
 
 add.js (extend CommonJs Module)
-``` 
+```
 //向avalon添加add方法
 require('avalon');
 
@@ -136,7 +138,7 @@ avalon.add = add;
 ```
 
 add.js (AMD Module)
-``` 
+```
 //如果avalon并没有
 define(['avalon'], function(avalon) {
    function add(){
@@ -147,7 +149,7 @@ define(['avalon'], function(avalon) {
         return sum;
     }
 
-    avalon.add = add; 
+    avalon.add = add;
 });
 ```
 
@@ -156,14 +158,14 @@ define(['avalon'], function(avalon) {
 common.js (extend CommonJs Module)
 ```
 require('avalon');
-require('json2');
 require('jquery');
+require('./libs/json2');
 ```
 
 common.js (AMD Module)
 
 ```
-define(['avalon', 'json2', 'jquery'], function(avalon, json2, jquery) {});
+define(['avalon', 'jquery', './libs/json2'], function(avalon, jquery, json2) {});
 ```
 
 ### 引入string类型的文件
@@ -294,58 +296,123 @@ define(['text!../templates/start'], function (template) {
 biz.js (CommonJs Module)
 
 ```
-var tpl = require('../templates/start'); 
+var tpl = require('../templates/start');
 
 //...
 
 $container.append(tpl);
 ```
 
-## AMD Usage
+## AMD Modules --> CommonJs Modules
 
-创建一个id为"alpha"的模块，使用了require，exports，和id为"beta"的模块:
+### 使用了id, dependencies, factory的module
 
+alpha.js (AMD Module)
 ```
 define("alpha", ["require", "exports", "beta"], function (require, exports, beta) {
    exports.verb = function() {
        return beta.verb();
-       //Or:
-       return require("beta").verb();
    }
 });
 ```
 
-返回对象字面量的匿名模块：
+转换为：
 
+alpha.js (CommonJs Module)
+```
+var beta = require('beta');
+
+exports.verb = function() {
+    return beta.verb();
+};
+```
+
+### 返回对象字面量的匿名模块
+
+alpha.js (AMD Module)
 ```
 define(["alpha"], function (alpha) {
-   	return {
-	    verb: function(){
-	    	return alpha.verb() + 2;
-	    }
-   	};
+    return {
+        verb: function(){
+            return alpha.verb() + 2;
+        }
+    };
 });
 ```
 
-没有依赖的模块可以用来直接定义对象字面量：
+转换为：
 
+alpha.js (CommonJs Module)
+```
+var alpha = require('alpha');
+
+exports.verb = function() {
+    return alpha.verb() + 2;
+};
+
+```
+
+### 定义没有依赖的对象字面量
+
+Math.js (AMD Module)
 ```
 define({
-	add: function(x, y){
-		return x + y;
-	}
+    add: function(x, y){
+        return x + y;
+    }
 });
 ```
 
-使用简单CJS包装定义模块
+转换为：
 
+Math.js (CommonJs Module)
+```
+exports.add = function(x, y) {
+    return x + y;
+};
+```
+
+### 使用CommonJs wrapper 定义的模块
+
+action.js (AMD Module)
 ```
 define(function (require, exports, module) {
-	var a = require('a'),
-		b = require('b');
+    var a = require('a'),
+        b = require('b');
 
-	exports.action = function () {};
+    exports.action = function () {};
 });
+```
+
+action.js (CommonJs Module)
+```
+var a = require('a'),
+    b = require('b');
+
+exports.action = function () {};
+
+```
+
+### 使用text!插件
+
+biz.js (AMD Module)
+
+```
+define(['text!../templates/start'], function (template) {
+    //...
+
+    $container.append(template);
+});
+```
+
+biz.js (CommonJs Module)
+
+```
+var tpl = require('../templates/start');
+
+//...
+
+$container.append(tpl);
 ```
 
 ## Modules 1.1.1 Usage
