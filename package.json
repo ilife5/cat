@@ -1,5 +1,5 @@
 {
-  "name": "cat",
+  "name": "modules-cat",
   "version": "0.0.0",
   "description": "CommonJs Modules <--> AMD Modules",
   "main": "index.js",
@@ -10,10 +10,14 @@
     "type": "git",
     "url": "https://github.com/ilife5/cat.git"
   },
+  "bin": "./src/catCmd.js",
   "author": "ilife5",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ilife5/cat/issues"
+  },
+  "dependencies": {
+    "commander" : "1.1.x"
   },
   "homepage": "https://github.com/ilife5/cat"
 }
