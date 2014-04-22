@@ -2,7 +2,7 @@
 
 /**
 
- modules-cat <operator>
+ modules-cat <operator> [options]
 
  */
 
@@ -11,7 +11,14 @@ var program,
     _i,
     _len,
     config,
-    tmplt;
+    tmplt,
+    Cat,
+    _,
+    cmdOptions;
+
+Cat = require('./Cat');
+
+_ = require('underscore');
 
 config = {};
 
@@ -32,7 +39,16 @@ for (_i = 0, _len = templates.length; _i < _len; _i++) {
     _fn(tmplt);
 }
 
-
 program.parse(process.argv);
 
-console.log(commander);
+cmdOptions = _.map(program.options, function(option) {
+    return option.long.slice(2);
+});
+
+_.extend(config, _.pick(program, cmdOptions));
+
+//build
+var cat = new Cat(config);
+
+cat.build();
+
