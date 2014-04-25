@@ -54,12 +54,11 @@ exports.increment = function(val) {
 increment.js(AMD Module)
 
 ```
-define(['math'], function(math) {
+define(['require', 'exports', 'module', 'math'], function(require, exports, module) {
     var add = math.add;
-    return {
-        increment : function(val) {
-            return add(val, 1);
-        }
+
+    exports.increment = function(val) {
+        return add(val, 1);
     };
 });
 ```

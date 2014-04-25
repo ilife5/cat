@@ -21,8 +21,10 @@
     "esprima": "1.0.x",
     "mkdirp": "0.3.x",
     "underscore": "1.6.0",
+    "uberscore": "0.0.16",
     "glob-expand": "0.0.2",
-    "minimatch": "0.2.x"
+    "minimatch": "0.2.x",
+    "path": "0.4.9"
   },
   "homepage": "https://github.com/ilife5/cat"
 }

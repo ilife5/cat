@@ -12,6 +12,7 @@ _ = require('underscore');
 function Cat( config ) {
     this.config = config;
     this.modules = [];
+    console.log(config);
 }
 
 Cat.prototype.build = function() {
@@ -21,22 +22,22 @@ Cat.prototype.build = function() {
             filter: 'isFile'
         }, '**/*'),
         modules = this.modules,
-        _this;
+        _this = this;
 
     //如果不存在文件则报错
     if(files.length > 0){
         _.each(files, function(filename) {
             modules.push( new Module( {
+                path: config.path,
                 filename: filename,
-                cat: _this
+                cat: _this,
+                template: config.template,
+                dstPath: config.dstPath
             } ) );
         });
     } else {
         console.log('文件夹下没有文件！');
     }
-
-    //config process
-    //read a file and parse it
 
 };
 
