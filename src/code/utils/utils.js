@@ -1,6 +1,6 @@
 var _uberscore, esprima, _, _path, NEED_CONVERTED;
 
-NEED_CONVERTED = ['js'];
+NEED_CONVERTED = ['.js'];
 
 _uberscore = require('uberscore');
 esprima = require('esprima');
@@ -118,13 +118,63 @@ function needConverted(filename) {
     return _.indexOf(NEED_CONVERTED, _path.extname(filename)) > -1;
 }
 
+function canBeRequired(dep) {
+    return _.indexOf(['require', 'exports', 'module'], dep) === -1;
+}
+
+//返回expression是否为exports语句
+function isExportsStatement(expression) {
+
+    var type, object, property;
+
+    type = expression.type;
+    object = expression.object;
+    property = expression.property;
+
+    return type === 'MemberExpression' && object && object.name === 'exports' && property && property.type === 'Identifier';
+
+}
+
+//返回expression是否为module.exports语句
+function isModuleExportsStatement(expression) {
+
+    var type, object, property;
+
+    type = expression.type;
+    object = expression.object;
+    property = expression.property;
+
+    return type === 'MemberExpression' && object && object.name === 'module' && property && property.type === 'Identifier' && property.name === 'exports';
+}
+
+//获取需要声明的依赖变量
+function getRealRequires(dependencies, parameters) {
+
+    var depLen, paramsLen, len, i, deps;
+
+    depLen = dependencies.length;
+    paramsLen = parameters.length;
+    len = depLen >= paramsLen? depLen: paramsLen;
+    deps = [];
+
+    for(i = 0; i < len; i++) {
+        deps.push([dependencies[i] && dependencies[i].trim(), parameters[i] && parameters[i].trim()]);
+    }
+
+    return deps;
+}
+
 module.exports = {
     isDefineStatement: isDefineStatement,
     isRequireStatement: isRequireStatement,
     isArgumentsLiteral: isArgumentsLiteral,
     isArgumentsArray: isArgumentsArray,
     isAssignmentExpression: isAssignmentExpression,
+    isModuleExportsStatement: isModuleExportsStatement,
     isVariableDeclarator: isVariableDeclarator,
+    isExportsStatement: isExportsStatement,
     combineDepends: combineDepends,
-    needConverted: needConverted
+    needConverted: needConverted,
+    getRealRequires: getRealRequires,
+    canBeRequired: canBeRequired
 };
