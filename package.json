@@ -1,6 +1,8 @@
 {
   "name": "modules-cat",
-  "version": "0.0.0",
+  "auth": "ilife5",
+  "email": "ilife5@qq.com",
+  "version": "0.0.1",
   "description": "CommonJs Modules <--> AMD Modules",
   "main": "index.js",
   "scripts": {
@@ -25,7 +27,8 @@
     "uberscore": "0.0.16",
     "glob-expand": "0.0.2",
     "minimatch": "0.2.x",
-    "path": "0.4.9"
+    "path": "0.4.9",
+    "quote-stream": "0.0.0"
   },
   "homepage": "https://github.com/ilife5/cat"
 }

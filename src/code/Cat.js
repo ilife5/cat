@@ -1,7 +1,7 @@
 /**
  * 查找文件 ==> 解析文件 ==> 批量输出
  */
- var globExpand, Module, _;
+var globExpand, Module, _;
 
 globExpand = require('glob-expand');
 
@@ -12,10 +12,10 @@ _ = require('underscore');
 function Cat( config ) {
     this.config = config;
     this.modules = [];
-    console.log(config);
 }
 
 Cat.prototype.build = function() {
+    debugger;
     var config = this.config,
         files = globExpand({
             cwd: config.path,

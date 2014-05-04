@@ -1,4 +1,4 @@
-var _uberscore, esprima, _, _path, NEED_CONVERTED;
+var _uberscore, esprima, _, _path, NEED_CONVERTED, fs;
 
 NEED_CONVERTED = ['.js'];
 
@@ -6,6 +6,7 @@ _uberscore = require('uberscore');
 esprima = require('esprima');
 _ = require('underscore');
 _path = require('path');
+fs = require('fs');
 
 
 /**
@@ -164,6 +165,14 @@ function getRealRequires(dependencies, parameters) {
     return deps;
 }
 
+function getQuotedFile(path) {
+    var r;
+
+    r = fs.readFileSync(_path.resolve(path));
+    r = JSON.stringify(r.toString("utf8"));
+    return r;
+}
+
 module.exports = {
     isDefineStatement: isDefineStatement,
     isRequireStatement: isRequireStatement,
@@ -176,5 +185,6 @@ module.exports = {
     combineDepends: combineDepends,
     needConverted: needConverted,
     getRealRequires: getRealRequires,
-    canBeRequired: canBeRequired
+    canBeRequired: canBeRequired,
+    getQuotedFile: getQuotedFile
 };

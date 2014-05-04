@@ -1,8 +1,10 @@
-var util, _, _path;
+var util, regs, _, _path, qs;
 
 util = require('./utils/utils');
+regs = require('./utils/regs');
 _ = require('underscore');
 _path = require('path');
+qs = require('quote-stream');
 
 //TODO: 对注释的处理
 //TODO: 加入构建信息
@@ -62,11 +64,11 @@ function nodeJsGenerator(file) {
             //不支持使用自定义的require依赖
             if(v[0] && v[1]) {
                 if(util.canBeRequired(v[1])) {
-                    declarationDeps.push(v[1] + ' = require("' + v[0] + '")' );
+                    declarationDeps.push(joinRequires(v[0], v[1]));
                 }
             } else if(v[0]) {
                 if(_.indexOf(requires, v[0]) === -1) {
-                    literalDeps.push('require("' + v[0] + '")');
+                    literalDeps.push(joinRequires(v[0]));
                 }
             }
         });
@@ -96,6 +98,34 @@ function nodeJsGenerator(file) {
         dependenciesStr,
         resourceStr
     ].join('\n');
+
+}
+
+function joinRequires( path, name ) {
+
+    var body;
+
+    body = path;
+
+    //处理plugins
+    if(regs.rTextPlugin.test(path)) {
+        body = util.getQuotedFile(path.replace(regs.rTextPlugin, function(s, p) {
+            return p;
+        }));
+
+        //如果有name返回name = "textBody"形式，如果没有name直接返回require("path")
+        if(name) {
+            return name + ' = ' + body;
+        } else {
+            return 'require("' + path + '")';
+        }
+    }
+
+    if(name) {
+        return name + ' = require("' + body + '")';
+    } else {
+        return 'require("' + body + '")';
+    }
 
 
 }
