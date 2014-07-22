@@ -89,9 +89,9 @@ function nodeJsGenerator(file) {
         if(specialExports) {
             resourceStr = defineContext.factoryBody;
         } else {
-            resourceStr = ['module.exports = (function(){',
+            resourceStr = ['module.exports = (',
                 defineContext.factoryBody,
-                '})();'].join('\n');
+                ')();'].join('\n');
         }
     } else {
         resourceStr = 'module.exports = ' + defineContext.factoryBody + ';';

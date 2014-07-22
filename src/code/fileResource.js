@@ -44,7 +44,7 @@ FileResource.prototype.read = function() {
             encoding: 'utf8'
         });
 
-        AST_top = esprima.parse( this.resource );
+        AST_top = esprima.parse( this.resource, {range: true, tokens: true, comment: true} );
 
         AST_body = AST_top.body;
 
@@ -53,6 +53,44 @@ FileResource.prototype.read = function() {
             if(ast.expression && util.isDefineStatement(ast.expression)) {
                 defines.push(ast.expression);
             }
+        });
+
+        //查找依赖
+        uberscore.traverse(AST_body, function(prop, src) {
+
+            var requireDep, requireVar;
+
+            //是否为require语句
+            if(util.isRequireStatement(src[prop])) {
+                if(util.isArgumentsLiteral(src[prop]) || util.isArgumentsArray(src[prop])) {
+                    requireDep = _.extend({}, src[prop].arguments[0]);
+                } else {
+                    return null;
+                }
+
+                if(util.isAssignmentExpression(src)) {
+                    requireVar = src.left.name;
+                } else if(util.isVariableDeclarator(src)) {
+                    requireVar = src.id.name;
+                }
+
+                if(requireDep) {
+                    if(requireVar) {
+                        reply.push(requireVar);
+                    }
+
+                    requires.push(requireDep);
+                }
+            }
+
+            if(src[prop].type === 'AssignmentExpression' && src[prop].left) {
+                if(util.isExportsStatement(src[prop].left)) {
+                    _this.defineContext.useExports = true;
+                } else if(util.isModuleExportsStatement((src[prop].left))) {
+                    _this.defineContext.useModule = true;
+                }
+            }
+            return null;
         });
 
         if(defines.length === 1) {
@@ -96,9 +134,21 @@ FileResource.prototype.read = function() {
 
             //factory
             if(_factoryBody.type === 'FunctionExpression') {
-                this.defineContext.factoryBody = _.map(_factoryBody.body.body, function(v) {
-                    return escodegen.generate(v);
-                }).join('\n');
+
+                var special = this.defineContext.useExports || this.defineContext.useModule,
+                    tree;
+
+                if(special) {
+                    tree = escodegen.attachComments({
+                        type: "Program",
+                        body: _factoryBody.body.body,
+                        range: _factoryBody.body.range
+                    }, AST_top.comments, AST_top.tokens);
+                } else {
+                    tree = escodegen.attachComments(_factoryBody, AST_top.comments, AST_top.tokens);
+                }
+
+                this.defineContext.factoryBody = escodegen.generate(tree, {comment: true});
                 this.defineContext.factoryType = 'Function';
                 //parameters
                 this.defineContext.parameters = _.map(_factoryBody.params, function(v) {
@@ -117,46 +167,9 @@ FileResource.prototype.read = function() {
             this.hasError = true;
         }
 
-        //查找依赖
-        uberscore.traverse(AST_body, function(prop, src) {
-
-            var requireDep, requireVar;
-
-            //是否为require语句
-            if(util.isRequireStatement(src[prop])) {
-                if(util.isArgumentsLiteral(src[prop]) || util.isArgumentsArray(src[prop])) {
-                    requireDep = _.extend({}, src[prop].arguments[0]);
-                } else {
-                    return null;
-                }
-
-                if(util.isAssignmentExpression(src)) {
-                    requireVar = src.left.name;
-                } else if(util.isVariableDeclarator(src)) {
-                    requireVar = src.id.name;
-                }
-
-                if(requireDep) {
-                    if(requireVar) {
-                        reply.push(requireVar);
-                    }
-
-                    requires.push(requireDep);
-                }
-            }
-
-            if(src[prop].type === 'AssignmentExpression' && src[prop].left) {
-                if(util.isExportsStatement(src[prop].left)) {
-                    _this.defineContext.useExports = true;
-                } else if(util.isModuleExportsStatement((src[prop].left))) {
-                    _this.defineContext.useModule = true;
-                }
-            }
-            return null;
-        });
-
     } catch(e) {
         this.hasError = true;
+        console.error(e)
     }
 };
 
