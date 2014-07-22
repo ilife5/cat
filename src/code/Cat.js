@@ -15,7 +15,6 @@ function Cat( config ) {
 }
 
 Cat.prototype.build = function() {
-    debugger;
     var config = this.config,
         files = globExpand({
             cwd: config.path,

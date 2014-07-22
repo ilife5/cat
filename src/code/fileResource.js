@@ -31,7 +31,6 @@ FileResource.prototype.read = function() {
 
     var filepath, AST_top, AST_body, defines, reply, _this, definesExpression, _factoryBody, _dependenciesBody, requires;
 
-
     _this = this;
     defines = this.defines;
     requires = this.requires;

@@ -1,3 +1,4 @@
 module.exports = {
-    rTextPlugin: /^text!(.+)/
+    rTextPlugin: /^text!(.+)/,
+    rCssPlugin: /^css!(.+)/
 };

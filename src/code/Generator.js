@@ -61,14 +61,17 @@ function nodeJsGenerator(file) {
     if(depLen > 0 || paramLen > 0) {
         depMapping = util.getRealRequires(defineContext.dependencies, defineContext.parameters);
         _.each(depMapping, function(v) {
+            var requireExpr;
             //不支持使用自定义的require依赖
             if(v[0] && v[1]) {
                 if(util.canBeRequired(v[1])) {
-                    declarationDeps.push(joinRequires(v[0], v[1]));
+                    requireExpr = joinRequires(v[0], v[1])
+                    requireExpr && declarationDeps.push( requireExpr );
                 }
             } else if(v[0]) {
                 if(_.indexOf(requires, v[0]) === -1) {
-                    literalDeps.push(joinRequires(v[0]));
+                    requireExpr = joinRequires(v[0]);
+                    requireExpr && literalDeps.push(requireExpr);
                 }
             }
         });
@@ -107,18 +110,24 @@ function joinRequires( path, name ) {
 
     body = path;
 
-    //处理plugins
+    //处理text plugins
     if(regs.rTextPlugin.test(path)) {
-        body = util.getQuotedFile(path.replace(regs.rTextPlugin, function(s, p) {
+        /*body = util.getQuotedFile(path.replace(regs.rTextPlugin, function(s, p) {
             return p;
-        }));
+        }));*/
 
         //如果有name返回name = "textBody"形式，如果没有name直接返回require("path")
-        if(name) {
+        /*if(name) {
             return name + ' = ' + body;
         } else {
             return 'require("' + path + '")';
-        }
+        }*/
+        body = path.replace(regs.rTextPlugin, function(s, p) {
+            return p;
+        });
+    } else if(regs.rCssPlugin.test(path)) {
+        //处理css plugin，先交由fekit打包工具来处理，这里过滤掉该plugin
+        return null;
     }
 
     if(name) {
