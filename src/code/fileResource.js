@@ -138,6 +138,11 @@ FileResource.prototype.read = function() {
                 var special = this.defineContext.useExports || this.defineContext.useModule,
                     tree;
 
+                //parameters
+                this.defineContext.parameters = _.map(_factoryBody.params, function(v) {
+                    return v.name.trim();
+                })
+
                 if(special) {
                     tree = escodegen.attachComments({
                         type: "Program",
@@ -145,15 +150,12 @@ FileResource.prototype.read = function() {
                         range: _factoryBody.body.range
                     }, AST_top.comments, AST_top.tokens);
                 } else {
+                    _factoryBody.params.length = 0;
                     tree = escodegen.attachComments(_factoryBody, AST_top.comments, AST_top.tokens);
                 }
-
                 this.defineContext.factoryBody = escodegen.generate(tree, {comment: true});
                 this.defineContext.factoryType = 'Function';
-                //parameters
-                this.defineContext.parameters = _.map(_factoryBody.params, function(v) {
-                    return v.name.trim();
-                })
+
             } else if(_factoryBody.type === 'ObjectExpression') {
                 this.defineContext.factoryBody = escodegen.generate(_factoryBody);
                 this.defineContext.factoryType = 'Object';

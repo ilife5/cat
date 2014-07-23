@@ -65,12 +65,12 @@ function nodeJsGenerator(file) {
             //不支持使用自定义的require依赖
             if(v[0] && v[1]) {
                 if(util.canBeRequired(v[1])) {
-                    requireExpr = joinRequires(v[0], v[1])
+                    requireExpr = joinRequires(file, v[0], v[1]);
                     requireExpr && declarationDeps.push( requireExpr );
                 }
             } else if(v[0]) {
                 if(_.indexOf(requires, v[0]) === -1) {
-                    requireExpr = joinRequires(v[0]);
+                    requireExpr = joinRequires(file, v[0]);
                     requireExpr && literalDeps.push(requireExpr);
                 }
             }
@@ -104,7 +104,7 @@ function nodeJsGenerator(file) {
 
 }
 
-function joinRequires( path, name ) {
+function joinRequires( file, path, name ) {
 
     var body;
 
@@ -112,19 +112,22 @@ function joinRequires( path, name ) {
 
     //处理text plugins
     if(regs.rTextPlugin.test(path)) {
-        /*body = util.getQuotedFile(path.replace(regs.rTextPlugin, function(s, p) {
+        path = path.replace(regs.rTextPlugin, function(s, p) {
             return p;
-        }));*/
+        });
+        path = _path.join(file.config.path, file.config.filename, '../', path);
+
+        body = util.getQuotedFile( path );
 
         //如果有name返回name = "textBody"形式，如果没有name直接返回require("path")
-        /*if(name) {
+        if(name) {
             return name + ' = ' + body;
         } else {
             return 'require("' + path + '")';
-        }*/
-        body = path.replace(regs.rTextPlugin, function(s, p) {
+        }
+       /* body = path.replace(regs.rTextPlugin, function(s, p) {
             return p;
-        });
+        });*/
     } else if(regs.rCssPlugin.test(path)) {
         //处理css plugin，先交由fekit打包工具来处理，这里过滤掉该plugin
         return null;
