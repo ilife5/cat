@@ -39,11 +39,17 @@ FileResource.prototype.read = function() {
     //拼接文件路径
     filepath = _path.join(this.config.path, this.config.filename);
 
-    try {
+    try{
         this.resource = fs.readFileSync(filepath, {
             encoding: 'utf8'
         });
 
+        this.defineContext.factoryBody = this.resource;
+    } catch(e) {
+        console.error(e);
+    }
+
+    try {
         AST_top = esprima.parse( this.resource, {range: true, tokens: true, comment: true} );
 
         AST_body = AST_top.body;

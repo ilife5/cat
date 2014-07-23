@@ -42,7 +42,7 @@ function amdGenerator(file) {
 
 function nodeJsGenerator(file) {
 
-    var defineContext, resourceStr, dependenciesStr, specialExports, depMapping, depLen, paramLen, declarationDeps, literalDeps, requires;
+    var defineContext, resourceStr, dependenciesStr, specialExports, depMapping, depLen, paramLen, declarationDeps, literalDeps, requires, exportsArr;
 
     if(!util.needConverted(file.config.filename)) {
         return file.resource;
@@ -93,14 +93,22 @@ function nodeJsGenerator(file) {
                 defineContext.factoryBody,
                 ')();'].join('\n');
         }
-    } else {
+    } else if(defineContext.factoryType === 'Object') {
         resourceStr = 'module.exports = ' + defineContext.factoryBody + ';';
+    } else {
+        resourceStr = defineContext.factoryBody;
     }
 
-    return [
-        dependenciesStr,
+    exportsArr = [
         resourceStr
-    ].join('\n');
+    ];
+
+    //如果有依赖变量且有长度，添加到导出物之前
+    if(dependenciesStr) {
+        exportsArr.unshift(dependenciesStr);
+    }
+
+    return exportsArr.join('\n');
 
 }
 
