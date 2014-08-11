@@ -6,9 +6,6 @@ _ = require('underscore');
 _path = require('path');
 qs = require('quote-stream');
 
-//TODO: 对注释的处理
-//TODO: 加入构建信息
-
 function Generator( file ) {
     this.file  = file;
 }
@@ -133,9 +130,6 @@ function joinRequires( file, path, name ) {
         } else {
             return 'require("' + path + '")';
         }
-       /* body = path.replace(regs.rTextPlugin, function(s, p) {
-            return p;
-        });*/
     } else if(regs.rCssPlugin.test(path)) {
         //处理css plugin，先交由fekit打包工具来处理，这里过滤掉该plugin
         return null;

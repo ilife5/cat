@@ -29,6 +29,4 @@ Module.prototype.output = function() {
     console.log('[log]', 'save', this.config.filename);
 };
 
-Module.prototype.convert = function() {};
-
 module.exports = Module;

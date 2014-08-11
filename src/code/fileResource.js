@@ -12,8 +12,6 @@ escodegen = require('escodegen');
 
 function FileResource( config ) {
     this.config = config;
-    this.hasError = false;      //记录是否转化有问题
-    this.noTrans = false;       //记录是否不需要转化
     this.defines = [];
     this.requires = [];
     this.defineContext = {
@@ -175,10 +173,7 @@ FileResource.prototype.read = function() {
             this.hasError = true;
         }
 
-    } catch(e) {
-        this.hasError = true;
-        //console.error(e)
-    }
+    } catch(e) {}
 };
 
 FileResource.prototype.save = function() {
