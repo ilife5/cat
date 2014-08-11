@@ -6,9 +6,7 @@ esprima = require('esprima');
 function Module( config ) {
     this.config = config;
     this.dependencies = [];
-    this.sourceCode = '';
     this.converted = '';
-
     this.analysis();
     this.output();
 }
@@ -19,6 +17,7 @@ function Module( config ) {
 Module.prototype.analysis = function() {
     var fileResource;
 
+    console.log('[log]', 'analysis', this.config.filename);
     fileResource = this.fileResource = new FileResource(this.config);
 
     fileResource.read();
@@ -27,6 +26,7 @@ Module.prototype.analysis = function() {
 
 Module.prototype.output = function() {
     this.fileResource.save();
+    console.log('[log]', 'save', this.config.filename);
 };
 
 Module.prototype.convert = function() {};

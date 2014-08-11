@@ -177,7 +177,7 @@ FileResource.prototype.read = function() {
 
     } catch(e) {
         this.hasError = true;
-        console.error(e)
+        //console.error(e)
     }
 };
 
