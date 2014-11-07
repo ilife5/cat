@@ -2,6 +2,21 @@
 
 nodejs <--> AMD 转换工具
 
+```
+  Usage: modules-cat [options] [command]
+
+  Commands:
+
+    AMD <path>             Converts all modules in <path> using 'AMD' template.
+    nodejs <path>          Converts all modules in <path> using 'nodejs' template.
+
+  Options:
+
+    -h, --help               output usage information
+    -V, --version            output the version number
+    -o, --dstPath <dstPath>  output converted files onto this directory
+```
+
 # CJS
 
 ## CommonJs Modules --> AMD
