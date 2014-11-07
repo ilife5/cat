@@ -35,7 +35,7 @@ FileResource.prototype.read = function() {
     reply = this.reply;
 
     //拼接文件路径
-    filepath = _path.join(this.config.path, this.config.filename);
+    filepath = this.config.filePath;
 
     try{
         this.resource = fs.readFileSync(filepath, {

@@ -120,7 +120,7 @@ function joinRequires( file, path, name ) {
         path = path.replace(regs.rTextPlugin, function(s, p) {
             return p;
         });
-        path = _path.join(file.config.path, file.config.filename, '../', path);
+        path = _path.join(file.config.filePath, '../', path);
 
         body = util.getQuotedFile( path );
 

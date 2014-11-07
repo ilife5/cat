@@ -14,9 +14,12 @@ var program,
     tmplt,
     Cat,
     _,
-    cmdOptions;
+    cmdOptions,
+    _path;
 
 Cat = require('./Cat');
+
+_path = require('path');
 
 _ = require('underscore');
 
@@ -30,7 +33,7 @@ templates = ['AMD', 'nodejs'];
 function _fn(tmplt) {
     return program.command("" + tmplt + " <path>").description("Converts all modules in <path> using '" + tmplt + "' template.").action(function(path) {
         config.template = tmplt;
-        return config.path = path;
+        return config.path = _path.resolve(path);
     });
 }
 
