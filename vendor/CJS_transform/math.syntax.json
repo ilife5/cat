@@ -1,0 +1,153 @@
+{
+    "type": "Program",
+    "body": [
+        {
+            "type": "ExpressionStatement",
+            "expression": {
+                "type": "AssignmentExpression",
+                "operator": "=",
+                "left": {
+                    "type": "MemberExpression",
+                    "computed": false,
+                    "object": {
+                        "type": "Identifier",
+                        "name": "exports"
+                    },
+                    "property": {
+                        "type": "Identifier",
+                        "name": "add"
+                    }
+                },
+                "right": {
+                    "type": "FunctionExpression",
+                    "id": null,
+                    "params": [],
+                    "defaults": [],
+                    "body": {
+                        "type": "BlockStatement",
+                        "body": [
+                            {
+                                "type": "VariableDeclaration",
+                                "declarations": [
+                                    {
+                                        "type": "VariableDeclarator",
+                                        "id": {
+                                            "type": "Identifier",
+                                            "name": "sum"
+                                        },
+                                        "init": {
+                                            "type": "Literal",
+                                            "value": 0,
+                                            "raw": "0"
+                                        }
+                                    },
+                                    {
+                                        "type": "VariableDeclarator",
+                                        "id": {
+                                            "type": "Identifier",
+                                            "name": "i"
+                                        },
+                                        "init": {
+                                            "type": "Literal",
+                                            "value": 0,
+                                            "raw": "0"
+                                        }
+                                    },
+                                    {
+                                        "type": "VariableDeclarator",
+                                        "id": {
+                                            "type": "Identifier",
+                                            "name": "args"
+                                        },
+                                        "init": {
+                                            "type": "Identifier",
+                                            "name": "arguments"
+                                        }
+                                    },
+                                    {
+                                        "type": "VariableDeclarator",
+                                        "id": {
+                                            "type": "Identifier",
+                                            "name": "l"
+                                        },
+                                        "init": {
+                                            "type": "MemberExpression",
+                                            "computed": false,
+                                            "object": {
+                                                "type": "Identifier",
+                                                "name": "args"
+                                            },
+                                            "property": {
+                                                "type": "Identifier",
+                                                "name": "length"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "kind": "var"
+                            },
+                            {
+                                "type": "WhileStatement",
+                                "test": {
+                                    "type": "BinaryExpression",
+                                    "operator": "<",
+                                    "left": {
+                                        "type": "Identifier",
+                                        "name": "i"
+                                    },
+                                    "right": {
+                                        "type": "Identifier",
+                                        "name": "l"
+                                    }
+                                },
+                                "body": {
+                                    "type": "BlockStatement",
+                                    "body": [
+                                        {
+                                            "type": "ExpressionStatement",
+                                            "expression": {
+                                                "type": "AssignmentExpression",
+                                                "operator": "+=",
+                                                "left": {
+                                                    "type": "Identifier",
+                                                    "name": "sum"
+                                                },
+                                                "right": {
+                                                    "type": "MemberExpression",
+                                                    "computed": true,
+                                                    "object": {
+                                                        "type": "Identifier",
+                                                        "name": "args"
+                                                    },
+                                                    "property": {
+                                                        "type": "UpdateExpression",
+                                                        "operator": "++",
+                                                        "argument": {
+                                                            "type": "Identifier",
+                                                            "name": "i"
+                                                        },
+                                                        "prefix": false
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "type": "ReturnStatement",
+                                "argument": {
+                                    "type": "Identifier",
+                                    "name": "sum"
+                                }
+                            }
+                        ]
+                    },
+                    "rest": null,
+                    "generator": false,
+                    "expression": false
+                }
+            }
+        }
+    ]
+}

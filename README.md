@@ -59,3 +59,52 @@ function () {
 ```
 modules-cat nodejs vendor/AMD -o vendor/AMD_transform
 ```
+
+## 将nodejs模块转化为amd模块
+
+```
+// vendor/CJS/Calculation.js
+
+//将构造函数Calculation通过module.exports导出
+function Calculation() {
+}
+
+Calculation.prototype.add = function(x, y) {
+    return x + y;
+};
+
+module.exports = Calculation;
+```
+
+如果想要把这个文件转化为CMD格式并输出到CJS_transform文件夹下我们输入
+
+```
+modules-cat amd CJS/Calculation.js -o CJS_transform 
+```
+
+输出结果为
+
+```
+// vendor/CJS_transform/Calculation.js
+
+define(function(require, exports, module) {
+
+//将构造函数Calculation通过module.exports导出
+function Calculation() {
+}
+
+Calculation.prototype.add = function(x, y) {
+    return x + y;
+};
+
+module.exports = Calculation;
+return module.exports;
+}
+);
+```
+
+还可以批量对文件夹进行操作，如果我们想把CJS目录下的所有文件进行转化并输出到CJS_transform中，我们输入
+
+```
+modules-cat AMD CJS -o CJS_transform/
+```
