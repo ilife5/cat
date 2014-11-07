@@ -1,4 +1,4 @@
-define(['text!../templates/start', 'jquery'], function (template, jquery) {
+define(['text!../templates/start.string', 'jquery'], function (template, jquery) {
 
     var $container = $('container');
 
