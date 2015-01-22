@@ -2,7 +2,7 @@
   "name": "modules-cat",
   "auth": "ilife5",
   "email": "ilife5@qq.com",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "CommonJs Modules <--> AMD Modules",
   "main": "index.js",
   "scripts": {
