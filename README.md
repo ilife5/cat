@@ -15,6 +15,7 @@ nodejs <--> AMD 转换工具
     -h, --help               output usage information
     -V, --version            output the version number
     -o, --dstPath <dstPath>  output converted files onto this directory
+    -s, --synchronization    convert amd to commonjs synchronously
 ```
 
 ## 将AMD模块转变为nodejs模块
@@ -52,6 +53,10 @@ function () {
     };
 }
 )();
+```
+默认文件转换采用异步的方式，如有需要可以添加-s选项使之同步转换
+```
+modules-cat nodejs vendor/AMD/anonymousAlpha.js -o vendor/AMD_transform/ -s
 ```
 
 还可以批量对文件夹进行操作，如果我们想把AMD目录下的所有文件进行转化并输出到AMD_transform中，我们输入
