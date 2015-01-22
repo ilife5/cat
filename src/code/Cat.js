@@ -22,9 +22,19 @@ Cat.prototype.build = function() {
     var config = this.config,
         files = [],
         modules = this.modules,
-        _this = this;
+        _this = this,
+        syncConvert = config.synchronization;
 
-    fs.lstat(config.path, function(err, stat) {
+    if (syncConvert) {
+        var stat = fs.lstatSync(config.path)
+        fileConvert()
+    } else {
+        fs.lstat(config.path, function(err, stat) {
+            fileConvert()
+        })
+    }
+    
+    function fileConvert() {
         if(stat.isFile(config.path)) {
             new Module( {
                 filename: _path.basename(config.path),
@@ -55,7 +65,7 @@ Cat.prototype.build = function() {
                 console.log('文件夹下没有文件！');
             }
         }
-    })
+    }
 };
 
 module.exports = Cat;
