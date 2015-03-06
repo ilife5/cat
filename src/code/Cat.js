@@ -27,14 +27,18 @@ Cat.prototype.build = function() {
 
     if (syncConvert) {
         var stat = fs.lstatSync(config.path)
-        fileConvert()
+        fileConvert(stat)
     } else {
         fs.lstat(config.path, function(err, stat) {
-            fileConvert()
+            if(!err) {
+                fileConvert(stat)    
+            } else {
+                console.log(err)
+            }
         })
     }
     
-    function fileConvert() {
+    function fileConvert(stat) {
         if(stat.isFile(config.path)) {
             new Module( {
                 filename: _path.basename(config.path),
