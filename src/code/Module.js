@@ -1,7 +1,9 @@
-var FileResource, esprima;
+var FileResource, esprima, log, chalk;
 
 FileResource = require('./FileResource');
 esprima = require('esprima');
+log = require('./utils/log');
+chalk = require('chalk');
 
 function Module( config ) {
     this.config = config;
@@ -17,7 +19,7 @@ function Module( config ) {
 Module.prototype.analysis = function() {
     var fileResource;
 
-    console.log('[log]', 'analysis', this.config.filename);
+    log.info('analysis', this.config.filename);
     fileResource = this.fileResource = new FileResource(this.config);
 
     fileResource.read();
@@ -26,7 +28,7 @@ Module.prototype.analysis = function() {
 
 Module.prototype.output = function() {
     this.fileResource.save();
-    console.log('[log]', 'save', this.config.filename);
+    log.info(chalk.red(chalk.bgYellow('saved')), this.config.filename);
 };
 
 module.exports = Module;

@@ -1,7 +1,7 @@
 /**
  * 查找文件 ==> 解析文件 ==> 批量输出
  */
-var globExpand, Module, _, fs, _path;
+var globExpand, Module, _, fs, _path, log;
 
 globExpand = require('glob-expand');
 
@@ -12,6 +12,8 @@ _ = require('underscore');
 fs = require('fs');
 
 _path = require('path');
+
+log = require('./utils/log')
 
 function Cat( config ) {
     this.config = config;
@@ -66,7 +68,7 @@ Cat.prototype.build = function() {
                     } );
                 });
             } else {
-                console.log('文件夹下没有文件！');
+                log.error('No files found!');
             }
         }
     }

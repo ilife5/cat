@@ -1,4 +1,4 @@
-var fs, _path, esprima, uberscore, util, _, Generator, mkdirp, escodegen;
+var fs, _path, esprima, uberscore, util, _, Generator, mkdirp, escodegen, log;
 
 fs = require('fs');
 _path = require('path');
@@ -9,6 +9,7 @@ _ = require('underscore');
 Generator = require('./Generator');
 mkdirp = require('mkdirp');
 escodegen = require('escodegen');
+log = require('./utils/log');
 
 function FileResource( config ) {
     this.config = config;
@@ -27,15 +28,32 @@ function FileResource( config ) {
 
 FileResource.prototype.read = function() {
 
-    var filepath, AST_top, AST_body, defines, reply, _this, definesExpression, _factoryBody, _dependenciesBody, requires;
+    var filepath,
+        AST_top,
+        AST_body,
+        defines,
+        reply,
+        _this,
+        definesExpression,
+        _factoryBody,
+        _dependenciesBody,
+        requires,
+        extArray;
 
     _this = this;
     defines = this.defines;
     requires = this.requires;
     reply = this.reply;
+    extArray = [".js"];     //对js类型的文件进行分析以及读取
 
     //拼接文件路径
     filepath = this.config.filePath;
+
+    //识别文件类型，只对js类型的文件做处理，其余类型的文件增加readOnly标识
+    if(extArray.indexOf(_path.extname(filepath)) === -1) {
+        this.config.readOnly = true;
+        return;
+    }
 
     try{
         this.resource = fs.readFileSync(filepath, {
@@ -173,14 +191,14 @@ FileResource.prototype.read = function() {
             this.hasError = true;
         }
 
-    } catch(e) {}
+    } catch(e) {
+        console.error(e);
+    }
 };
 
 FileResource.prototype.save = function() {
     var generator, source, fileName, fileDirName;
 
-    generator = new Generator(this);
-    source = generator.generator();
     fileName = _path.join(this.config.dstPath, this.config.filename);
 
     try{
@@ -188,14 +206,20 @@ FileResource.prototype.save = function() {
             mkdirp.sync(fileDirName);
         }
 
+        if(this.config.readOnly) {
+            log.warn(_path.extname(this.config.filePath), "files should be transform.");
+            //如果文件类型是readOnly的，直接执行拷贝操作
+            fs.createReadStream(this.config.filePath).pipe(fs.createWriteStream(fileName));
+        }
+
+        generator = new Generator(this);
+        source = generator.generator();
         fs.writeFileSync(fileName, source, {
             encoding: 'utf8'
         });
     } catch(e) {
-        console.error(e.stack);
+        console.error(e);
     }
-
-
 };
 
 module.exports = FileResource;
