@@ -25,7 +25,7 @@ _ = require('underscore');
 
 config = {};
 
-program = require('commander').version('0.0.0').
+program = require('commander').version('0.0.6').
     option('-o, --dstPath <String>', 'output converted files onto this directory').
     option('-s, --synchronization', 'convert amd to commonjs synchronously').
     option('-S, --staticFiles <string>', 'files not to be transformed').
