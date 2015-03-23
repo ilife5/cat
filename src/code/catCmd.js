@@ -26,9 +26,9 @@ _ = require('underscore');
 config = {};
 
 program = require('commander').version('0.0.0').
-    option('-o, --dstPath <dstPath>', 'output converted files onto this directory').
+    option('-o, --dstPath <String>', 'output converted files onto this directory').
     option('-s, --synchronization', 'convert amd to commonjs synchronously').
-    option('-f, --fullOutput', 'output all files, default is true');
+    option('-i, --ignore <String>', 'files to be ignored');
 
 templates = ['AMD', 'nodejs'];
 

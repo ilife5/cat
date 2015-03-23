@@ -1,7 +1,7 @@
 /**
  * 查找文件 ==> 解析文件 ==> 批量输出
  */
-var globExpand, Module, _, fs, _path, log;
+var globExpand, Module, _, fs, _path, log, minimatch;
 
 globExpand = require('glob-expand');
 
@@ -13,7 +13,9 @@ fs = require('fs');
 
 _path = require('path');
 
-log = require('./utils/log')
+log = require('./utils/log');
+
+minimatch = require('minimatch');
 
 function Cat( config ) {
     this.config = config;
@@ -39,9 +41,20 @@ Cat.prototype.build = function() {
             }
         })
     }
-    
+
+    //文件转换，包括对文件的读取与写入
     function fileConvert(stat) {
-        if(stat.isFile(config.path)) {
+
+        var ignoreList = config.ignore? config.ignore.split(","): [];
+
+        //使用minimatch做文件排除，见https://github.com/isaacs/minimatch#nonegate
+        ignoreList = ignoreList.map(function(ignore) {
+            return "!" + ignore
+        })
+
+        if(stat.isFile(config.path) && !config.ignore.some(function(pattern) {
+                return minimatch(config.path, pattern)
+            })) {
             new Module( {
                 filename: _path.basename(config.path),
                 filePath: config.path,
@@ -53,7 +66,7 @@ Cat.prototype.build = function() {
             files = globExpand({
                 cwd: config.path,
                 filter: 'isFile'
-            }, '**/*');
+            }, ['**/*'].concat(ignoreList));
 
             //如果不存在文件则报错
             if(files.length > 0){
