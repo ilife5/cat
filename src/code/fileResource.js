@@ -1,4 +1,4 @@
-var fs, _path, esprima, uberscore, util, _, Generator, mkdirp, escodegen, log;
+var fs, _path, esprima, uberscore, util, _, Generator, mkdirp, escodegen, log, minimatch;
 
 fs = require('fs');
 _path = require('path');
@@ -10,6 +10,7 @@ Generator = require('./Generator');
 mkdirp = require('mkdirp');
 escodegen = require('escodegen');
 log = require('./utils/log');
+minimatch = require('minimatch');
 
 function FileResource( config ) {
     this.config = config;
@@ -38,19 +39,25 @@ FileResource.prototype.read = function() {
         _factoryBody,
         _dependenciesBody,
         requires,
-        extArray;
+        extArray,
+
+        //不需要转换的文件
+        staticFiles;
 
     _this = this;
     defines = this.defines;
     requires = this.requires;
     reply = this.reply;
+    staticFiles = this.config.staticFiles || "";
     extArray = [".js"];     //对js类型的文件进行分析以及读取
 
     //拼接文件路径
     filepath = this.config.filePath;
 
-    //识别文件类型，只对js类型的文件做处理，其余类型的文件增加readOnly标识
-    if(extArray.indexOf(_path.extname(filepath)) === -1) {
+    //如果文件路径匹配只读文件的pattern，或者其后缀不为js，将其readOnly置为true，不需要进行转换
+    if(staticFiles.split(",").some(function(pattern) {
+            return minimatch(filepath, pattern);
+        }) || extArray.indexOf(_path.extname(filepath)) === -1) {
         this.config.readOnly = true;
         return;
     }
@@ -207,7 +214,7 @@ FileResource.prototype.save = function() {
         }
 
         if(this.config.readOnly) {
-            log.warn(_path.extname(this.config.filePath), "files just copy.");
+            log.warn(_path.basename(this.config.filePath), "file just copy.");
             //如果文件类型是readOnly的，直接执行拷贝操作
             fs.createReadStream(this.config.filePath).pipe(fs.createWriteStream(fileName));
         }

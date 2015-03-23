@@ -60,13 +60,15 @@ Cat.prototype.build = function() {
                 filePath: config.path,
                 cat: _this,
                 template: config.template,
-                dstPath: config.dstPath
+                dstPath: config.dstPath,
+                staticFiles: config.staticFiles
             } );
         } else if(stat.isDirectory()) {
             files = globExpand({
                 cwd: config.path,
                 filter: 'isFile'
             }, ['**/*'].concat(ignoreList));
+
 
             //如果不存在文件则报错
             if(files.length > 0){
@@ -77,7 +79,8 @@ Cat.prototype.build = function() {
                         filePath: _path.join(config.path, filename),
                         cat: _this,
                         template: config.template,
-                        dstPath: config.dstPath
+                        dstPath: config.dstPath,
+                        staticFiles: config.staticFiles
                     } );
                 });
             } else {
