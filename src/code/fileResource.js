@@ -207,7 +207,7 @@ FileResource.prototype.save = function() {
         }
 
         if(this.config.readOnly) {
-            log.warn(_path.extname(this.config.filePath), "files should be transform.");
+            log.warn(_path.extname(this.config.filePath), "files just copy.");
             //如果文件类型是readOnly的，直接执行拷贝操作
             fs.createReadStream(this.config.filePath).pipe(fs.createWriteStream(fileName));
         }
