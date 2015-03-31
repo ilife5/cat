@@ -4,7 +4,7 @@
   "email": "ilife5@qq.com",
   "version": "0.0.6",
   "description": "CommonJs Modules <--> AMD Modules",
-  "main": "index.js",
+  "main": "./src/code/Cat.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
