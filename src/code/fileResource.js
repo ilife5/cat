@@ -34,10 +34,11 @@ function pathFilter(v) {
         ./xxx/xxx keep
         ./xxx keep
         ../xxx[/xxx] keep
+        avalon keep
     */
     var str = v.trim()
     if(str.match(/(^[^\!]+[\!]|^[\.]{1,})|\.css$/g)) return v
-    return "../" + str
+    return str.indexOf("/") != -1 ? "../" + str : str
 }
 
 FileResource.prototype.read = function() {
