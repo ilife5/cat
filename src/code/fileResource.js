@@ -27,6 +27,19 @@ function FileResource( config ) {
     this.reply = [];
 }
 
+function pathFilter(v) {
+    /*
+        text!
+        xxx/xxx -> ../xxx/xxx
+        ./xxx/xxx keep
+        ./xxx keep
+        ../xxx[/xxx] keep
+    */
+    var str = v.trim()
+    if(str.match(/(^[^\!]+[\!]|^[\.]{1,})|\.css$/g)) return v
+    return "../" + str
+}
+
 FileResource.prototype.read = function() {
 
     var filepath,
@@ -150,12 +163,12 @@ FileResource.prototype.read = function() {
                 switch(_dependenciesBody.type) {
                     case 'Literal':
                         this.defineContext.dependencies = _.map(_dependenciesBody.value.split(','), function(v) {
-                            return v.trim();
+                            return pathFilter(v.trim());
                         });
                         break;
                     case 'ArrayExpression':
                         this.defineContext.dependencies = _.map(_dependenciesBody.elements, function(v) {
-                            return v.value.trim();
+                            return pathFilter(v.value.trim());
                         });
                         break;
                 }
@@ -216,7 +229,7 @@ FileResource.prototype.save = function() {
         if(this.config.readOnly) {
             log.warn(_path.basename(this.config.filePath), "file just copy.");
             //如果文件类型是readOnly的，直接执行拷贝操作
-            fs.createReadStream(this.config.filePath).pipe(fs.createWriteStream(fileName));
+            return fs.writeFileSync(fileName, fs.readFileSync(this.config.filePath))
         }
 
         generator = new Generator(this);

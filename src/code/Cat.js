@@ -24,7 +24,7 @@ function Cat( config ) {
 
 Cat.prototype.build = function() {
     var config = this.config,
-        files = [],
+        files = this.files = [],
         modules = this.modules,
         _this = this,
         syncConvert = config.synchronization;
@@ -45,18 +45,20 @@ Cat.prototype.build = function() {
     //文件转换，包括对文件的读取与写入
     function fileConvert(stat) {
 
-        var ignoreList = config.ignore? config.ignore.split(","): [];
+        var ignoreList = config.ignore ? config.ignore.split(","): [];
 
         //使用minimatch做文件排除，见https://github.com/isaacs/minimatch#nonegate
         ignoreList = ignoreList.map(function(ignore) {
             return "!" + ignore
         })
 
-        if(stat.isFile(config.path) && !config.ignore.some(function(pattern) {
-                return minimatch(config.path, pattern)
-            })) {
+        if(stat.isFile(config.path) && !(config.ignore.some && config.ignore.some(function(pattern) {
+                    return minimatch(config.path, pattern)
+                }))) {
+            var filename = _path.basename(config.path)
+            files.push(filename)
             new Module( {
-                filename: _path.basename(config.path),
+                filename: filename,
                 filePath: config.path,
                 cat: _this,
                 template: config.template,
@@ -64,12 +66,10 @@ Cat.prototype.build = function() {
                 staticFiles: config.staticFiles
             } );
         } else if(stat.isDirectory()) {
-            files = globExpand({
+            _this.files = files = globExpand({
                 cwd: config.path,
                 filter: 'isFile'
             }, ['**/*'].concat(ignoreList));
-
-
             //如果不存在文件则报错
             if(files.length > 0){
                 _.each(files, function(filename) {
