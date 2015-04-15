@@ -52,7 +52,7 @@ Cat.prototype.build = function() {
             return "!" + ignore
         })
 
-        if(stat.isFile(config.path) && !config.ignore.some(function(pattern) {
+        if(stat.isFile(config.path) && !ignoreList.some(function(pattern) {
                 return minimatch(config.path, pattern)
             })) {
             new Module( {

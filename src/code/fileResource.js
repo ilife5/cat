@@ -216,7 +216,7 @@ FileResource.prototype.save = function() {
         if(this.config.readOnly) {
             log.warn(_path.basename(this.config.filePath), "file just copy.");
             //如果文件类型是readOnly的，直接执行拷贝操作
-            fs.createReadStream(this.config.filePath).pipe(fs.createWriteStream(fileName));
+            return fs.writeFileSync(fileName, fs.readFileSync(this.config.filePath))
         }
 
         generator = new Generator(this);
