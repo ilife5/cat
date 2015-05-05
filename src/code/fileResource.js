@@ -27,20 +27,6 @@ function FileResource( config ) {
     this.reply = [];
 }
 
-function pathFilter(v) {
-    /*
-        text!
-        xxx/xxx -> ../xxx/xxx
-        ./xxx/xxx keep
-        ./xxx keep
-        ../xxx[/xxx] keep
-        avalon keep
-    */
-    var str = v.trim()
-    if(str.match(/(^[^\!]+[\!]|^[\.]{1,})|\.css$/g)) return v
-    return str.indexOf("/") != -1 ? "../" + str : str
-}
-
 FileResource.prototype.read = function() {
 
     var filepath,
@@ -164,12 +150,12 @@ FileResource.prototype.read = function() {
                 switch(_dependenciesBody.type) {
                     case 'Literal':
                         this.defineContext.dependencies = _.map(_dependenciesBody.value.split(','), function(v) {
-                            return pathFilter(v.trim());
+                            return v.trim();
                         });
                         break;
                     case 'ArrayExpression':
                         this.defineContext.dependencies = _.map(_dependenciesBody.elements, function(v) {
-                            return pathFilter(v.value.trim());
+                            return v.value.trim();
                         });
                         break;
                 }
